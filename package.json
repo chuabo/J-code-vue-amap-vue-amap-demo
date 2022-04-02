@@ -8,7 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@amap/amap-vue": "^2.0.13",
+    "@ant-design/pro-card": "^1.19.1",
     "@tinymce/tinymce-vue": "^4.0.5",
+    "ant-design-vue": "^1.7.8",
     "axios": "^0.25.0",
     "core-js": "^3.20.3",
     "tinymce": "^5.10.2",
@@ -21,6 +24,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "less": "^4.1.2",
+    "less-loader": "^6.0.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
@@ -36,7 +41,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
-	"no-undef": 0
+      "no-undef": 0
     }
   },
   "browserslist": [

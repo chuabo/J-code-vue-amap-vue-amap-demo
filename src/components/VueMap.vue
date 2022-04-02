@@ -1,5 +1,16 @@
 <template>
-  <div>
+  <div class="container">
+    <div class="side">
+      <ul class="list" @mouseout="hoverItem = null">
+        <!-- eslint-disable -->
+        <li v-for="(item, index) in dataList" :key="item.id" @mouseover="hoverItem = item" @click="activeItem = item" :class="{ active: activeItem === item, hover: hoverItem === item }">
+          <div class="name">{{item.content}}</div>
+          <!--<div class="bar">111
+            <div class="bar-inner" :style="barStyle(item, index + 1)" />
+          </div>-->
+        </li>
+      </ul>
+    </div>
     <div class="map-container">
       <amap
         id="amap"
@@ -11,10 +22,29 @@
         is-hotspot
         @complete="ready = true"
         >
+        <amap-info-window
+          :visible="infoData.show"
+          :position="infoData.position ? infoData.position : null"
+          :z-index="999"
+          :offset="[0, -40]"
+          is-custom
+        >
+          <div class="info-window-content">
+            <a-card shadow="always" v-if="infoData.show">
+              <a-icon
+                type="close"
+                class="button-close"
+                @click="infoData.show = false"
+              />
+              <h3>{{ infoData.title }}</h3>
+              <div>{{ infoData.content }}</div>
+            </a-card>
+          </div>
+        </amap-info-window>
         <amap-marker-cluster
           v-if="style == 'default'"
           key="default"
-          :data="list"
+          :data="dataList"
           :grid-size="gridSize"
           :average-center="averageCenter"
           @click="onclick"
@@ -23,7 +53,7 @@
         <amap-marker-cluster
           v-if="style == 'styles'"
           key="styles"
-          :data="list"
+          :data="dataList"
           :grid-size="gridSize"
           :min-cluster-size=3
           :average-center="averageCenter"
@@ -35,7 +65,7 @@
         <amap-marker-cluster
           v-if="style == 'custom-cluster'"
           key="custom-cluster"
-          :data="list"
+          :data="dataList"
           :grid-size="gridSize"
           :marker-options="getMarkerOptions"
           :cluster-options="getClusterOptions"
@@ -52,7 +82,7 @@
         <amap-marker-cluster
           v-if="style == 'custom-marker'"
           key="custom-marker"
-          :data="list"
+          :data="dataList"
           :grid-size="gridSize"
           :marker-options="getMarkerOptions"
           :average-center="averageCenter"
@@ -67,7 +97,7 @@
         <amap-marker-cluster
           v-if="style == 'custom-all'"
           key="custom-all"
-          :data="list"
+          :data="dataList"
           :grid-size="gridSize"
           :marker-options="getMarkerOptions"
           :cluster-options="getClusterOptions"
@@ -103,6 +133,8 @@ export default {
   data() {
     return {
       zoom: 5,
+      activeItem: null,
+      hoverItem: null,
       markers: [],
       mapInstance: null,
       map: null,
@@ -153,109 +185,130 @@ export default {
           { lnglat: ["111.985337", "24.15146"] },
         { lnglat: ["115.985037", "22.15146"] },
       ],
-      list: [{
+      dataList: [{
               lnglat: [113.951955,22.530825],
-              lnt: 113.951955,
+              lng: 113.951955,
               lat: 22.530825,
+              id: 1,
               content: "aaa",
               url: "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2126240618,1874470849&fm=26&gp=0.jpg"
           }, /*{
               lnglat: [116.397428,39.90923],
-              lnt: 116.397428,
+              lng: 116.397428,
               lat: 39.90923,
+              id: 2,
               content: "bbb",
               url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605524499220&di=061f5404ccf4b56ca5109c6a74cad7e8&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F18%2F01%2F15%2Fecc1be26af0ccb3aab8a64cbc1d7d5b9.jpg"
           }, */{
               lnglat: [117.000923,36.675807],
-              lnt: 117.000923,
+              lng: 117.000923,
               lat: 36.675807,
-              content: "ccc",
+              id: 3,
+              content: "cccccccccccc",
               url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3897032442,810482418&fm=26&gp=0.jpg"
           }, {
               lnglat: [112.89114340293699,38.06208615376387],
-              lnt: 112.89114340293699,
+              lng: 112.89114340293699,
               lat: 38.06208615376387,
-              content: "ddd",
+              id: 4,
+              content: "dddddddddddddddddddd",
               url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3897032442,810482418&fm=26&gp=0.jpg"
           }, {
               lnglat: [116.303843,39.983412],
-              lnt: 116.303843,
+              lng: 116.303843,
               lat: 39.983412,
-              content: "eee",
+              id: 5,
+              content: "eeeeeeeeeeeeeeeeeeeeeeeeeee",
               url: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1794114107,2569649938&fm=26&gp=0.jpg"
           }, /*{
               lnglat: [108.94444,34.14248],
-              lnt: 108.94444,
+              lng: 108.94444,
               lat: 34.14248,
+              id: 6,
               content: "fff",
               url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605524653591&di=fce2171454e6d4d44545e51b41bb4224&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Foriginal_pic%2F19%2F03%2F18%2Fbf2928abcd5f96beab12f7a8611614c5.jpg"
           }, {
               lnglat: [121.472644,31.231706],
-              lnt: 121.472644,
+              lng: 121.472644,
               lat: 31.231706,
+              id: 7,
               content: "ggg",
               url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605524499220&di=061f5404ccf4b56ca5109c6a74cad7e8&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F18%2F01%2F15%2Fecc1be26af0ccb3aab8a64cbc1d7d5b9.jpg"
           }, //上海
           {
               lnglat: [121.506377,31.245105],
-              lnt: 121.506377,
+              lng: 121.506377,
               lat: 31.245105,
+              id: 8,
               content: "hhh",
               url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605524653591&di=fce2171454e6d4d44545e51b41bb4224&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Foriginal_pic%2F19%2F03%2F18%2Fbf2928abcd5f96beab12f7a8611614c5.jpg"
           },*/ {
               lnglat: [121.392735,31.083714],
-              lnt: 121.392735,
+              lng: 121.392735,
               lat: 31.083714,
-              content: "iii",
+              id: 9,
+              content: "iiiiiiiiiiiiii",
               url: " https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1794114107,2569649938&fm=26&gp=0.jpg",
 
           },
 
           {
               lnglat: [107.0138,33.0436],
-              lnt: 107.0138,
+              lng: 107.0138,
               lat: 33.0436,
+              id: 10,
               content: "jjjj",
               url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3897032442,810482418&fm=26&gp=0.jpg",
 
           }, //汉中
           /*{
               lnglat: [108.95,34.27],
-              lnt: 108.95,
+              lng: 108.95,
               lat: 34.27,
+              id: 11,
               content: "kkkk",
               url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605524499220&di=061f5404ccf4b56ca5109c6a74cad7e8&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F18%2F01%2F15%2Fecc1be26af0ccb3aab8a64cbc1d7d5b9.jpg"
 
           },*/ {
               lnglat: [109.11,35.09],
-              lnt: 109.11,
+              lng: 109.11,
               lat: 35.09,
+              id: 12,
               content: "lll",
               url: "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2126240618,1874470849&fm=26&gp=0.jpg",
 
           }, {
               lnglat: [110.51,38.83],
-              lnt: 110.51,
+              lng: 110.51,
               lat: 38.83,
+              id: 13,
               content: "mmm",
               url: " https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1794114107,2569649938&fm=26&gp=0.jpg"
 
           }, {
               lnglat: [109.77,38.3],
-              lnt: 109.77,
+              lng: 109.77,
               lat: 38.3,
+              id: 14,
               content: "nnnn",
               url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3897032442,810482418&fm=26&gp=0.jpg",
 
           }, {
               lnglat: [106.16, 33.34],
-              lnt: 106.16,
+              lng: 106.16,
               lat: 33.34,
+              id: 15,
               content: "oooo",
               url: "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2126240618,1874470849&fm=26&gp=0.jpg"
 
           },
-      ]
+      ],
+      infoData: {
+        show: true,
+        position: null,
+        title: 'infoTitle',
+        content: 'infoContent'
+      }
     }
   },
   created() {
@@ -280,6 +333,18 @@ export default {
     //this.mapInit();
   },
   mounted() {
+  },
+  watch: {
+    activeItem(item) {
+      if (!item) return;
+      console.log(item);
+      this.infoData.show = true;
+      this.infoData.position = new Array();
+      this.infoData.position[0] = item.lng;
+      this.infoData.position[1] = item.lat
+
+      this.mapInstance.setCenter([item.lng, item.lat]);
+    }
   },
   methods: {
     // 地图初始化
@@ -330,10 +395,10 @@ export default {
     },
     addCluster() {
       const self = this;
-      this.list.map(item => {
+      this.dataList.map(item => {
         let marker = new AMap.Marker({
-          lnglat: [item.lnt, item.lat],
-          position: new AMap.LngLat(item.lnt, item.lat),
+          lnglat: [item.lng, item.lat],
+          position: new AMap.LngLat(item.lng, item.lat),
           title: item.title,
           content: `<div><img style="width:100px;height:60px"  src="${item.url}"></img>居民小组(556)人</div>`,
           offset: new AMap.Pixel(-15, -15)
@@ -347,7 +412,7 @@ export default {
                 //self.map,
                 self.mapInstance,
                 // 窗口信息的位置
-                marker.getPosition(item.lnt, item.lat)
+                marker.getPosition(item.lng, item.lat)
             );
         })
         //console.log(marker)
@@ -421,14 +486,14 @@ export default {
 
       // 点聚合样式
       self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.markers, {gridSize: 80});
-      //self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.list, {gridSize: 80});
-      //self.cluster = new AMap.MarkerCluster(self.mapInstance, self.list, {gridSize: 80, renderClusterMarker: _renderClusterMarker, renderMarker: _renderMarker});
-      //self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.list, {gridSize: 80, renderClusterMarker: self._renderClusterMarker, renderMarker: self._renderMarker});
-      //self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.list, {styles: sts, gridSize: 80, averageCenter: true, zoomOnClick: false });
+      //self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.dataList, {gridSize: 80});
+      //self.cluster = new AMap.MarkerCluster(self.mapInstance, self.dataList, {gridSize: 80, renderClusterMarker: _renderClusterMarker, renderMarker: _renderMarker});
+      //self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.dataList, {gridSize: 80, renderClusterMarker: self._renderClusterMarker, renderMarker: self._renderMarker});
+      //self.cluster = new AMap.MarkerClusterer(self.mapInstance, self.dataList, {styles: sts, gridSize: 80, averageCenter: true, zoomOnClick: false });
 
       
 
-     //self.cluster = new AMap.MarkerClusterer(self.mapInstance, this.list, {gridSize: 80});
+     //self.cluster = new AMap.MarkerClusterer(self.mapInstance, this.dataList, {gridSize: 80});
      //self.cluster.setMap(self.mapInstance);
       //console.log(self.cluster)
     },
@@ -449,7 +514,7 @@ export default {
     getClusterOptions(context) {
       console.log('context2:', context);
       const size = Math.round(
-        30 + Math.pow(context.count / this.list.length, 1 / 5) * 20
+        30 + Math.pow(context.count / this.dataList.length, 1 / 5) * 20
       );
       return {
         offset: [-size / 2, -size / 2],
@@ -459,6 +524,10 @@ export default {
     onclick(e) {
       const self = this;
       console.log(e)
+      this.infoData.show = true;
+      this.infoData.position = new Array();
+      this.infoData.position[0] = e.lnglat.lng;
+      this.infoData.position[1] = e.lnglat.lat;
       const zoom = this.mapInstance.getZoom();
       // 点击展开重合的点
       if (e.clusterData.length > 1) {
@@ -466,8 +535,8 @@ export default {
         const item = e.clusterData[0];
 
         /*let marker = new AMap.Marker({
-          //lnglat: [item.lnt, item.lat],
-          position: new AMap.LngLat(item.lnt, item.lat),
+          //lnglat: [item.lng, item.lat],
+          position: new AMap.LngLat(item.lng, item.lat),
           title: item.title,
           content: `<div><img style="width:100px;height:60px"  src="${item.url}"></img></div>`,
           offset: new AMap.Pixel(-15, -15)
@@ -481,7 +550,7 @@ export default {
                 //self.map,
                 self.mapInstance,
                 // 窗口信息的位置
-                marker.getPosition(item.lnt, item.lat)
+                marker.getPosition(item.lng, item.lat)
             );
         })
         //console.log(marker)
@@ -497,7 +566,7 @@ export default {
     },
     getClusterStyle(context) {
       console.log('context', context)
-      const u = context.count / this.list.length;
+      const u = context.count / this.dataList.length;
       const hue = this.interpolate(u, 90, 0);
       const size = this.interpolate(u, 30, 50);
       return {
@@ -518,10 +587,80 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.map-container {
+<style lang="less" scoped>
+.container {
+  display: flex;
+  border: 1px solid #000;
   width: 100%;
-  height: calc(100vh - 10px);
-  /*height: 400px;*/
+  /*height: 200px;*/
+
+  .side {
+    
+    /*height: 100%;*/
+    overflow-x: scroll;
+  }
+
+  .list {
+    
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /*width: 140px;*/
+    width: 200px;
+    
+    
+    position: relative;
+
+    li {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px 12px;
+      cursor: default;
+      white-space: nowrap;
+    }
+    li.hover,
+    li.active {
+      background-color: #e5e5e5;
+    }
+    .name {
+      width: 100%;
+      white-space: nowrap;
+      /*text-overflow: ellipsis;
+      overflow-x: hidden;*/
+    }
+    .bar {
+      padding: 4px 0 0;
+    }
+    .bar-inner {
+      height: 8px;
+    }
+  }
+
+  .map-container {
+    width: 100%;
+    height: calc(100vh - 0px);
+    /*height: 400px;*/
+
+    .info-window-content {
+      position: relative;
+
+      h3 {
+        margin-top: 0;
+      }
+
+      .button-close {
+        position: absolute;
+        right: 0.5px;
+        top: 0.5px;
+
+        cursor: pointer;
+      }
+    }
+  }
 }
+
+
+
+
+
 </style>
