@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+import Element from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(Element);
+
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 Vue.use(Antd);
@@ -18,6 +22,10 @@ AmapVue.config.plugins = [
   // 在此配置你需要预加载的插件，如果不配置，在使用到的时候会自动异步加载
 ];
 Vue.use(AmapVue);
+
+import * as echarts from 'echarts'
+import 'echarts-liquidfill'
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 

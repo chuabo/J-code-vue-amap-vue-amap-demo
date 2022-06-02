@@ -1,25 +1,29 @@
 <template>
   <div id="app">
-    <VueMap />
+    <home />
+    <!--<VueMap />-->
   </div>
 </template>
 
 <script>
 import VueMap from './components/VueMap.vue'
+import home from './components/home.vue'
 
 export default {
   name: 'App',
   components: {
+    home,
     VueMap
   },
   props: {
   },
   data() {
     return {
-      
     }
   },
   mounted () {
+  },
+  watch: {
   },
   created() {
   
@@ -39,7 +43,7 @@ body {
 }
 </style>
 
-<style  scoped>
+<style lang="less" scoped>
 #app {
   width: 100%;
   height: 100%;
