@@ -2,7 +2,7 @@
     <div id="projectMap" ref="projectMap" style="width: 100%;height: 100vh;">111</div>
 </template>
 <script>
-import cqmap from '/assets/cqmap.json'//就是这么个意思
+import cqmap from '/assets/ynmap.json'//就是这么个意思
 export default {
   data() {
     return {
@@ -32,7 +32,7 @@ export default {
           },
           //工具栏   设置为false不展示，内置有导出图片，数据视图，动态类型切换，数据区域缩放，重置五个工具，暂不需要
           toolbox: {
-            show: true,
+            show: false,
             orient: "vertical",
             left: "right",
             top: "center",

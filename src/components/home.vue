@@ -23,22 +23,23 @@
           <el-menu-item-group title="分组2">
             <el-menu-item index="test">test</el-menu-item>
           </el-menu-item-group>
-          <el-submenu index="1-4">
+          <el-submenu index="vueMap2">
             <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
+            <el-menu-item index="vueMap2">vueMap2</el-menu-item>
           </el-submenu>
         </el-submenu>
         <el-menu-item index="2">
           <i class="el-icon-menu"></i>
           <span slot="title">导航二</span>
         </el-menu-item>
-        <el-menu-item index="3" disabled>
+        <!--<el-menu-item index="geoserver" disabled>-->
+        <el-menu-item index="geoserver">
           <i class="el-icon-document"></i>
-          <span slot="title">导航三</span>
+          <span slot="title">geoserver</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="openlayerMap">
           <i class="el-icon-setting"></i>
-          <span slot="title">导航四</span>
+          <span slot="title">openlayerMap</span>
         </el-menu-item>
       </el-menu>
     </el-col>
